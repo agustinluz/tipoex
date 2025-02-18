@@ -1,0 +1,28 @@
+.cronometro-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #282c34;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    margin: auto;
+}
+
+.cronometro-tiempo {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.cronometro-boton {
+    background-color: #61dafb;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cronometro-boton.reiniciar {
+    background-color: #ff4d4d;
+}

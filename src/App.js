@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import React, {useState} from "react";
+import Ejercicio1 from "./componentes/ejercicio1";
+import Ejercicio2 from "./componentes/ejercicio2";
+
+const App = () => {
+  const [mostrarEjercicio, setMostrarEjercicio] = useState(1); // Controlar qué ejercicio mostrar
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+          <h1>Mi Cronómetro</h1>
+          <button onClick={() => setMostrarEjercicio(1)}>Ejercicio 1</button>
+          <button onClick={() => setMostrarEjercicio(2)}>Ejercicio 2</button>
+          
+          {mostrarEjercicio === 1 && <Ejercicio1 />}
+          {mostrarEjercicio === 2 && <Ejercicio2 />}
+      </div>
   );
-}
+};
 
 export default App;
