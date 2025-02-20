@@ -5,14 +5,14 @@ import "./Cronometro.css";
 const Cronometro = () => {
     const [tiempo, setTiempo] = useState(0);  // Tiempo inicial es 0
     const [enMarcha, setEnMarcha] = useState(false);  // El cronómetro no está en marcha al principio
-
+  
     // Usamos useEffect para manejar el intervalo
     useEffect(() => {
         let intervalo;
         if (enMarcha) {
             intervalo = setInterval(() => {
                 setTiempo(tiempo => tiempo + 1);  // Aumentamos el tiempo en 1 cada segundo
-            }, 1000);
+                }, 1000);
         } else {
             clearInterval(intervalo);  // Detenemos el cronómetro si no está en marcha
         }
@@ -25,6 +25,7 @@ const Cronometro = () => {
     };
 
     // Función para reiniciar el cronómetro
+
     const reiniciar = () => {
         setEnMarcha(false);  // Detenemos el cronómetro
         setTiempo(0);  // Reiniciamos el tiempo a 0
@@ -34,14 +35,17 @@ const Cronometro = () => {
     const minutos = String(Math.floor(tiempo / 60)).padStart(2, '0');  // Calculamos los minutos
     const segundos = String(tiempo % 60).padStart(2, '0');  // Calculamos los segundos
 
+    // Renderizamos el componente con el tiempo y los botones de control del cronómetro
     return (
+        // Contenedor del cronómetro con estilo CSS
         <div className="cronometro-container">
             {/* Mostramos el tiempo con formato minutos:segundos */}
             <h2 className="cronometro-tiempo">{minutos}:{segundos}</h2>
             
             {/* Botón para iniciar o detener el cronómetro */}
             <button className="cronometro-boton" onClick={iniciarDetener}>
-                {enMarcha ? 'Detener' : 'Iniciar'}  {/* Cambia el texto dependiendo del estado */}
+                {enMarcha ? 'Detener' : 'Iniciar'}  
+                {/* Cambia el texto dependiendo del estado */}
             </button>
             
             {/* Botón para reiniciar el cronómetro */}

@@ -1,16 +1,7 @@
-/**Crear una aplicación para realizar un juego sobre preguntas de geografía, en el que el usuario deberá
-responder cuál es la provincia a la que pertenece una localidad concreta. El funcionamiento será el
-siguiente: (6 ptos.)
- se irán mostrando nombres de localidades de forma aleatoria.
- el usuario indicará cuál es la provincia a la que corresponde (por ej. mediante un select,
-botones,...).
- al finalizar indicará el número de aciertos y de errores obtenidos.
- las localidades podrían ser las siguientes: Écija, Carmona, Dos Hermanas, Montilla, Lucena,
-Baena, Torremolinos, Antequera y Mijas. */
+import React, { useState, useEffect } from "react";
 
-import React, { useState } from "react";
-
-const preguntas = [
+// Lista de localidades con sus provincias
+const preguntasBase = [
     { localidad: "Écija", provincia: "Sevilla" },
     { localidad: "Carmona", provincia: "Sevilla" },
     { localidad: "Dos Hermanas", provincia: "Sevilla" },
@@ -25,11 +16,17 @@ const preguntas = [
 const provincias = ["Sevilla", "Córdoba", "Málaga"];
 
 const GeografiaQuiz = () => {
+    const [preguntas, setPreguntas] = useState([]); // Preguntas en orden aleatorio
     const [indice, setIndice] = useState(0);
     const [respuesta, setRespuesta] = useState("");
     const [aciertos, setAciertos] = useState(0);
     const [errores, setErrores] = useState(0);
     const [terminado, setTerminado] = useState(false);
+
+    // Mezcla las preguntas de forma aleatoria al inicio del juego
+    useEffect(() => {
+        setPreguntas([...preguntasBase].sort(() => Math.random() - 0.5));
+    }, []);
 
     const verificarRespuesta = () => {
         if (respuesta === preguntas[indice].provincia) {
@@ -40,7 +37,7 @@ const GeografiaQuiz = () => {
 
         if (indice < preguntas.length - 1) {
             setIndice(indice + 1);
-            setRespuesta("");
+            setRespuesta(""); // Reinicia la selección
         } else {
             setTerminado(true);
         }
@@ -54,7 +51,7 @@ const GeografiaQuiz = () => {
                     <p>Aciertos: {aciertos}</p>
                     <p>Errores: {errores}</p>
                 </div>
-            ) : (
+            ) : preguntas.length > 0 ? (
                 <div>
                     <h2>¿A qué provincia pertenece {preguntas[indice].localidad}?</h2>
                     <select value={respuesta} onChange={(e) => setRespuesta(e.target.value)}>
@@ -65,9 +62,10 @@ const GeografiaQuiz = () => {
                     </select>
                     <button onClick={verificarRespuesta} disabled={!respuesta}>Responder</button>
                 </div>
+            ) : (
+                <p>Cargando preguntas...</p>
             )}
         </div>
     );
 };
-
 export default GeografiaQuiz;
