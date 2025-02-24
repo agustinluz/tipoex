@@ -1,40 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Cronometro.css";
 
 const Cronometro = () => {
-    // 🕒 Guardamos los segundos que han pasado
+    // 🕒 Estado para almacenar los segundos transcurridos
     const [segundos, setSegundos] = useState(0);
-    // ⏯️ Guardamos si el cronómetro está en marcha o no
+    // ⏯️ Estado para saber si el cronómetro está corriendo o en pausa
     const [activo, setActivo] = useState(false);
+    // 🔗 Referencia al intervalo para mantenerlo entre renders sin re-crearlo
+    const intervaloRef = useRef(null);
 
-    // ⏳ Si está activo, suma 1 cada segundo
     useEffect(() => {
-        if (!activo) return; // Si está en pausa, no hacemos nada
-        const intervalo = setInterval(() => {
-            setSegundos(prev => prev + 1);
-        }, 1000);
-        return () => clearInterval(intervalo); // Limpiar cuando se detiene
-    }, [activo]); // Se ejecuta cada vez que 'activo' cambia
+        if (activo) {
+            // ⏱️ Si está activo, iniciamos el intervalo y guardamos su referencia
+            intervaloRef.current = setInterval(() => {
+                setSegundos(prev => prev + 1);
+            }, 1000);
+        } else {
+            // 🛑 Si no está activo, limpiamos el intervalo
+            clearInterval(intervaloRef.current);
+        }
 
-    // 🔘 Cambiar entre iniciar y detener
-    const manejarInicioPausa = () => setActivo(!activo);
+        // 🚨 Cleanup: Se limpia al desmontar o al cambiar 'activo'
+        return () => clearInterval(intervaloRef.current);
+    }, [activo]);
 
-    // 🔄 Reiniciar el cronómetro
+    // 🔘 Alternar entre iniciar y detener el cronómetro
+    const manejarInicioPausa = () => setActivo(prev => !prev);
+
+    // 🔄 Reiniciar el cronómetro a 0 y detenerlo
     const reiniciarCronometro = () => {
         setSegundos(0);
         setActivo(false);
+        clearInterval(intervaloRef.current); // Aseguramos que el intervalo se detenga
     };
 
-    // ⏰ Convertir segundos a minutos y segundos con 2 cifras
+    // ⏰ Convertimos segundos en minutos y segundos con formato 00:00
     const minutos = String(Math.floor(segundos / 60)).padStart(2, "0");
     const segs = String(segundos % 60).padStart(2, "0");
 
     return (
         <div className="cronometro-container">
+            {/* ⏱️ Mostramos el tiempo en formato MM:SS */}
             <h2 className="cronometro-tiempo">{minutos}:{segs}</h2>
+
+            {/* 🔘 Botón para iniciar o detener el cronómetro */}
             <button className="cronometro-boton" onClick={manejarInicioPausa}>
                 {activo ? "Detener" : "Iniciar"}
             </button>
+
+            {/* 🔄 Botón para reiniciar el cronómetro */}
             <button className="cronometro-boton reiniciar" onClick={reiniciarCronometro}>
                 Reiniciar
             </button>
